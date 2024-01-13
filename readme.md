@@ -16,14 +16,37 @@
 **You are given a series of setTimeouts that execute after 10 seconds, write a `cancelAlltimeout()` function that can cancel all the setTimeouts when called**
 
 ```javascript
+const createTimeoutManager = () => {
+  const timeoutIds = [];
+
+  const setTimeout = (callback, delay) => {
+    const timeoutId = setTimeout(() => {
+      timeoutIds.splice(timeoutIds.indexOf(timeoutId), 1);
+      callback();
+    }, delay);
+
+    timeoutIds.push(timeoutId);
+
+    return timeoutId;
+  };
+
+  const cancelAllTimeouts = () => {
+    timeoutIds.forEach(id => clearTimeout(id));
+    timeoutIds.length = 0;
+  };
+
+  return { setTimeout, cancelAllTimeouts };
+};
+
+// Example usage:
+const { setTimeout, cancelAllTimeouts } = createTimeoutManager();
+
 setTimeout(()=> console.log("Task One"), 10000)
 setTimeout(()=> console.log("Task Two"), 10000)
 setTimeout(()=> console.log("Task Three"), 10000)
 setTimeout(()=> console.log("Task Four"), 10000)
+cancelAllTimeouts();
 
-function clearAllTimeout(){
-// implement here
-}
 ```
 
 ## Currying 
